@@ -49,7 +49,7 @@
 
 @media screen and (min-width: 968px) {
   :root {
-    --big-font-size: 3rem;
+    --big-font-size: 2rem;
     --h1-font-size: 2.25rem;
     --h2-font-size: 1.5rem;
     --h3-font-size: 1.25rem;
@@ -154,8 +154,13 @@ img {
 }
 
 .grid {
-  display: grid;
+  display:grid;
   gap: 1.5rem;
+}
+
+.flex{
+  display:flex;
+  gap:1.5rem;
 }
 
 .header {
@@ -464,12 +469,12 @@ img {
 }
 
 .skills__list {
-  row-gap: 1.5rem;
+  row-gap: 5.5rem;
   padding-left: 2.7rem;
 }
 
 .skills__titles {
-  display: flex;
+  display:flex;
   justify-content: space-between;
   margin-bottom: var(--mb-0-5);
 }

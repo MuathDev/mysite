@@ -4,14 +4,16 @@ using Infastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211008175808_removedeidsImages3")]
+    partial class removedeidsImages3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,52 +39,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Address");
-                });
-
-            modelBuilder.Entity("Core.Entities.BackEndSkills", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
-
-                    b.Property<string>("SkillName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TotalSkill")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("imagesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("imagesId");
-
-                    b.ToTable("BackEndSkills");
-                });
-
-            modelBuilder.Entity("Core.Entities.FrontEndSkills", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
-
-                    b.Property<string>("SkillName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TotalSkill")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("imagesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("imagesId");
-
-                    b.ToTable("FrontEndSkills");
                 });
 
             modelBuilder.Entity("Core.Entities.Images", b =>
@@ -130,7 +86,7 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("75e333d9-8866-42ba-92f6-86e2306052ae"),
+                            Id = new Guid("478dc6ce-0fdb-4512-98ac-784576d4faa2"),
                             FullName = "Muath Alobaisi",
                             Profil = "Software Developer / Fullstack Developer"
                         });
@@ -159,22 +115,27 @@ namespace Infrastructure.Migrations
                     b.ToTable("PortfolioItems");
                 });
 
-            modelBuilder.Entity("Core.Entities.BackEndSkills", b =>
+            modelBuilder.Entity("Core.Entities.PortfolioSkills", b =>
                 {
-                    b.HasOne("Core.Entities.Images", "images")
-                        .WithMany()
-                        .HasForeignKey("imagesId");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
-                    b.Navigation("images");
-                });
+                    b.Property<string>("SkillName")
+                        .HasColumnType("nvarchar(max)");
 
-            modelBuilder.Entity("Core.Entities.FrontEndSkills", b =>
-                {
-                    b.HasOne("Core.Entities.Images", "images")
-                        .WithMany()
-                        .HasForeignKey("imagesId");
+                    b.Property<string>("TotalSkill")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Navigation("images");
+                    b.Property<Guid?>("imagesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("imagesId");
+
+                    b.ToTable("PortfolioSkills");
                 });
 
             modelBuilder.Entity("Core.Entities.Owner", b =>
@@ -193,6 +154,15 @@ namespace Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("Core.Entities.PortfolioItem", b =>
+                {
+                    b.HasOne("Core.Entities.Images", "images")
+                        .WithMany()
+                        .HasForeignKey("imagesId");
+
+                    b.Navigation("images");
+                });
+
+            modelBuilder.Entity("Core.Entities.PortfolioSkills", b =>
                 {
                     b.HasOne("Core.Entities.Images", "images")
                         .WithMany()

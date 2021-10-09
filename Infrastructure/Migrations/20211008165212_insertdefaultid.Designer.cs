@@ -4,14 +4,16 @@ using Infastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211008165212_insertdefaultid")]
+    partial class insertdefaultid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,52 +41,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Address");
                 });
 
-            modelBuilder.Entity("Core.Entities.BackEndSkills", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
-
-                    b.Property<string>("SkillName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TotalSkill")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("imagesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("imagesId");
-
-                    b.ToTable("BackEndSkills");
-                });
-
-            modelBuilder.Entity("Core.Entities.FrontEndSkills", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
-
-                    b.Property<string>("SkillName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TotalSkill")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("imagesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("imagesId");
-
-                    b.ToTable("FrontEndSkills");
-                });
-
             modelBuilder.Entity("Core.Entities.Images", b =>
                 {
                     b.Property<Guid>("Id")
@@ -95,7 +51,22 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PortfolioItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SkillsId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("PortfolioItemId");
+
+                    b.HasIndex("SkillsId");
 
                     b.ToTable("Images");
                 });
@@ -116,21 +87,16 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Profil")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("imagesId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
-
-                    b.HasIndex("imagesId");
 
                     b.ToTable("Owner");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("75e333d9-8866-42ba-92f6-86e2306052ae"),
+                            Id = new Guid("b410b276-5690-4792-aab6-641f0a4bcbf1"),
                             FullName = "Muath Alobaisi",
                             Profil = "Software Developer / Fullstack Developer"
                         });
@@ -149,56 +115,83 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ProjectName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("imagesId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("imagesId");
 
                     b.ToTable("PortfolioItems");
                 });
 
-            modelBuilder.Entity("Core.Entities.BackEndSkills", b =>
+            modelBuilder.Entity("Core.Entities.PortfolioSkills", b =>
                 {
-                    b.HasOne("Core.Entities.Images", "images")
-                        .WithMany()
-                        .HasForeignKey("imagesId");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
-                    b.Navigation("images");
+                    b.Property<string>("SkillName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TotalSkill")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PortfolioSkills");
                 });
 
-            modelBuilder.Entity("Core.Entities.FrontEndSkills", b =>
+            modelBuilder.Entity("Core.Entities.Images", b =>
                 {
-                    b.HasOne("Core.Entities.Images", "images")
-                        .WithMany()
-                        .HasForeignKey("imagesId");
+                    b.HasOne("Core.Entities.Owner", "owner")
+                        .WithMany("Images")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("images");
+                    b.HasOne("Core.Entities.PortfolioItem", "PortfolioItem")
+                        .WithMany("Images")
+                        .HasForeignKey("PortfolioItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.PortfolioSkills", "Skills")
+                        .WithMany("Images")
+                        .HasForeignKey("SkillsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("owner");
+
+                    b.Navigation("PortfolioItem");
+
+                    b.Navigation("Skills");
                 });
 
             modelBuilder.Entity("Core.Entities.Owner", b =>
                 {
                     b.HasOne("Core.Entities.Address", "Address")
-                        .WithMany()
+                        .WithMany("owner")
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("Core.Entities.Images", "images")
-                        .WithMany()
-                        .HasForeignKey("imagesId");
-
                     b.Navigation("Address");
+                });
 
-                    b.Navigation("images");
+            modelBuilder.Entity("Core.Entities.Address", b =>
+                {
+                    b.Navigation("owner");
+                });
+
+            modelBuilder.Entity("Core.Entities.Owner", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("Core.Entities.PortfolioItem", b =>
                 {
-                    b.HasOne("Core.Entities.Images", "images")
-                        .WithMany()
-                        .HasForeignKey("imagesId");
+                    b.Navigation("Images");
+                });
 
-                    b.Navigation("images");
+            modelBuilder.Entity("Core.Entities.PortfolioSkills", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

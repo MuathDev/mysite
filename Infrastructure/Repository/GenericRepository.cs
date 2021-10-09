@@ -1,8 +1,10 @@
 ﻿using Core.Interfaces;
 using Infastructure;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Repository
 {
@@ -21,9 +23,36 @@ namespace Infrastructure.Repository
             table.Remove(existing);
         }
 
+        public T Find(Expression<Func<T, bool>> expression, string[] includes = null)
+        {
+            IQueryable<T> Query = table;
+            if (includes != null)
+                foreach (var include in includes)
+                    Query = Query.Include(include);
+            return Query.SingleOrDefault(expression);
+        }
+
+        public IEnumerable<T> FindAll(Expression<Func<T, bool>> expression, string[] includes = null)
+        {
+            IQueryable<T> Query = table;
+            if (includes != null)
+                foreach (var include in includes)
+                    Query = Query.Include(include);
+            return Query.Where(expression).ToList();
+        }
+
         public IEnumerable<T> GetAll()
         {
             return table.ToList();
+        }
+
+        public IEnumerable<T> GetAll(string[] includes = null)
+        {
+            IQueryable<T> Query = table;
+            if (includes != null)
+                foreach (var include in includes)
+                    Query = Query.Include(include);
+            return Query.ToList();
         }
 
         public T GetById(object id)

@@ -1,4 +1,6 @@
+using Core.Interfaces;
 using Infastructure;
+using Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +28,8 @@ namespace WebUI
             {
                 options.UseSqlServer(Configuration.GetConnectionString("CMSMysiteDB"));
             });
+
+            services.AddScoped(typeof(IUnitOfWork<>),typeof(UnitOfWork<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
